@@ -96,14 +96,6 @@ class MapboxNavigationView: UIView, NavigationViewControllerDelegate {
     // let options = NavigationRouteOptions(waypoints: [originWaypoint, destinationWaypoint])
     let options = NavigationRouteOptions(waypoints: [originWaypoint, destinationWaypoint], profileIdentifier: .automobileAvoidingTraffic)
 
-    if let vehicleMaxHeight = vehicleMaxHeight?.doubleValue {
-        options.includesMaxHeightOnMostRestrictiveBridge = true
-        options.maxHeight = vehicleMaxHeight
-    }
-    if let vehicleMaxWidth = vehicleMaxWidth?.doubleValue {
-        options.maxWidth = vehicleMaxWidth
-    }
-
     Directions.shared.calculate(options) { [weak self] (_, result) in
       guard let strongSelf = self, let parentVC = strongSelf.parentViewController else {
         return
