@@ -434,7 +434,7 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
 
         setCameraPositionToOrigin()
 
-        mapboxMap.loadStyleUri(NavigationStyles.STANDARD) { style ->
+        mapboxMap.loadStyleUri(NavigationStyles.NAVIGATION_DAY_STYLE) { style ->
             Log.d("MapboxNavigationView", "Map style successfully loaded")
             Log.d("MapboxNavigationView", "Style URI: ${style.styleURI}")
         }
