@@ -526,7 +526,7 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
                         routes: List<NavigationRoute>,
                         routerOrigin: RouterOrigin
                     ) {
-                        setRouteAndStartNavigation(routes.map { it.directionsRoute() })
+                        setRouteAndStartNavigation(routes)
                     }
 
                     override fun onFailure(
@@ -560,18 +560,21 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
             sendErrorToReact("No route found")
             return
         }
+    
+        // Set routes directly as NavigationRoute
         mapboxNavigation.setNavigationRoutes(routes)
-
+    
         if (shouldSimulateRoute) {
             startSimulation(routes.first())
         }
-
+    
         binding.soundButton.visibility = View.VISIBLE
         binding.routeOverview.visibility = View.VISIBLE
         binding.tripProgressCard.visibility = View.VISIBLE
-
+    
         navigationCamera.requestNavigationCameraToOverview()
     }
+    
 
     private fun clearRouteAndStopNavigation() {
         mapboxNavigation.setNavigationRoutes(listOf())
@@ -582,16 +585,16 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
         binding.tripProgressCard.visibility = View.INVISIBLE
     }
 
-    private fun startSimulation(route: DirectionsRoute) {
+    private fun startSimulation(route: NavigationRoute) {
         mapboxReplayer.run {
             stop()
             clearEvents()
-            val replayEvents = ReplayRouteMapper().mapDirectionsRouteGeometry(route)
+            val replayEvents = ReplayRouteMapper().mapDirectionsRouteGeometry(route.directionsRoute())
             pushEvents(replayEvents)
             seekTo(replayEvents.first())
             play()
         }
-    }
+    }    
 
     fun onDropViewInstance() {
         this.onDestroy()
