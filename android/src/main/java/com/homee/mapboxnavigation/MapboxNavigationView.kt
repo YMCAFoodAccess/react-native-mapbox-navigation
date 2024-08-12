@@ -48,6 +48,8 @@ import com.mapbox.navigation.core.trip.session.LocationMatcherResult
 import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
 import com.mapbox.navigation.core.trip.session.VoiceInstructionsObserver
+import com.mapbox.android.core.location.LocationEngineProvider
+import com.mapbox.api.directions.v5.DirectionsCriteria
 import com.homee.mapboxnavigation.databinding.NavigationViewBinding
 import com.mapbox.navigation.ui.base.util.MapboxNavigationConsumer
 import com.mapbox.navigation.ui.maneuver.api.MapboxManeuverApi
@@ -521,10 +523,10 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
                 routeOptions,
                 object : NavigationRouterCallback {
                     override fun onRoutesReady(
-                        routes: List<DirectionsRoute>,
+                        routes: List<NavigationRoute>,
                         routerOrigin: RouterOrigin
                     ) {
-                        setRouteAndStartNavigation(routes)
+                        setRouteAndStartNavigation(routes.map { it.directionsRoute() })
                     }
 
                     override fun onFailure(
