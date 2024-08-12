@@ -344,17 +344,17 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
             enabled = true
         }
 
-        mapboxNavigation = MapboxNavigationApp.setup(
+        mapboxNavigation = MapboxNavigation(
             NavigationOptions.Builder(context)
                 .accessToken(accessToken)
-                .locationEngine(if (shouldSimulateRoute) replayLocationEngine else null)
+                .locationEngine(if (shouldSimulateRoute) replayLocationEngine else LocationEngineProvider.getBestLocationEngine(context))
                 .build()
-        ).also {
-            it.registerRoutesObserver(routesObserver)
-            it.registerLocationObserver(locationObserver)
-            it.registerRouteProgressObserver(routeProgressObserver)
-            it.registerVoiceInstructionsObserver(voiceInstructionsObserver)
-            it.startTripSession()
+        ).apply {
+            registerRoutesObserver(routesObserver)
+            registerLocationObserver(locationObserver)
+            registerRouteProgressObserver(routeProgressObserver)
+            registerVoiceInstructionsObserver(voiceInstructionsObserver)
+            startTripSession()
         }
 
         viewportDataSource = MapboxNavigationViewportDataSource(mapboxMap)
@@ -455,7 +455,7 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
 
     private fun startRoute() {
         mapboxNavigation.registerRoutesObserver(routesObserver)
-        mapboxNavigation.registerArrivalObserver(arrivalObserver)
+        // mapboxNavigation.registerArrivalObserver(arrivalObserver)
         mapboxNavigation.registerRouteProgressObserver(routeProgressObserver)
         mapboxNavigation.registerLocationObserver(locationObserver)
         mapboxNavigation.registerVoiceInstructionsObserver(voiceInstructionsObserver)
@@ -479,7 +479,7 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
     }
 
     private fun onDestroy() {
-        MapboxNavigationApp.destroy()
+        mapboxNavigation.onDestroy()
         mapboxReplayer.finish()
         maneuverApi.cancel()
         routeLineApi.cancel()
@@ -499,7 +499,7 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
                 .applyDefaultNavigationOptions()
                 .applyLanguageAndVoiceUnitOptions(context)
                 .coordinatesList(coordinates)
-                .profile(DirectionsCriteria.PROFILE_DRIVING)
+                .profile(DirectionsCriteria.PROFILE_DRIVING_TRAFFIC)
                 .steps(true)
                 .bearingsList(
                     listOf(
@@ -521,7 +521,7 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
                 routeOptions,
                 object : NavigationRouterCallback {
                     override fun onRoutesReady(
-                        routes: List<NavigationRoute>,
+                        routes: List<DirectionsRoute>,
                         routerOrigin: RouterOrigin
                     ) {
                         setRouteAndStartNavigation(routes)
@@ -580,7 +580,7 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
         binding.tripProgressCard.visibility = View.INVISIBLE
     }
 
-    private fun startSimulation(route: NavigationRoute) {
+    private fun startSimulation(route: DirectionsRoute) {
         mapboxReplayer.run {
             stop()
             clearEvents()
