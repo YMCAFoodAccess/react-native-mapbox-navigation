@@ -589,7 +589,7 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
         mapboxReplayer.run {
             stop()
             clearEvents()
-            val replayEvents = ReplayRouteMapper().mapDirectionsRouteGeometry(route.directionsRoute())
+            val replayEvents = ReplayRouteMapper().mapDirectionsRouteGeometry(route.directionsRoute)
             pushEvents(replayEvents)
             seekTo(replayEvents.first())
             play()
