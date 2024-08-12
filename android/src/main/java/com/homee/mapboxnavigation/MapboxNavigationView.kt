@@ -434,7 +434,10 @@ class MapboxNavigationView(private val context: ThemedReactContext, private val 
 
         setCameraPositionToOrigin()
 
-        mapboxMap.loadStyleUri(NavigationStyles.NAVIGATION_DAY_STYLE)
+        mapboxMap.loadStyleUri(NavigationStyles.MAPBOX_STREETS) { style ->
+            Log.d("MapboxNavigationView", "Map style successfully loaded")
+            Log.d("MapboxNavigationView", "Style URI: ${style.styleURI}")
+        }
 
         binding.stop.setOnClickListener {
             clearRouteAndStopNavigation()
