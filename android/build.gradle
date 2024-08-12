@@ -21,7 +21,6 @@ def isNewArchitectureEnabled() {
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
-
 def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
 
 if (isNewArchitectureEnabled()) {
@@ -44,6 +43,7 @@ android {
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
   }
+
   buildTypes {
     release {
       minifyEnabled false
@@ -68,6 +68,10 @@ android {
     viewBinding true
   }
 
+  // Add packaging options to avoid the so.loader issue
+  packagingOptions {
+    pickFirst '**/libc++_shared.so'
+  }
 }
 
 repositories {
@@ -85,7 +89,7 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
   // mapbox dependencies
-   implementation "com.mapbox.navigation:android:2.20.1"
+  implementation "com.mapbox.navigation:android:2.20.1"
   implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
   implementation 'androidx.cardview:cardview:1.0.0'
 }
