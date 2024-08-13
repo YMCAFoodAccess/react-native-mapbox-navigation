@@ -36,6 +36,7 @@ def getExtOrIntegerDefault(name) {
 }
 
 android {
+  namespace = "com.homee.mapboxnavigation"
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
 
   defaultConfig {
