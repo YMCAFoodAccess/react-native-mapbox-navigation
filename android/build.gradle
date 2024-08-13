@@ -8,9 +8,9 @@ buildscript {
   }
 
   dependencies {
-    classpath "com.android.tools.build:gradle:8.6.0-rc01"
+    classpath "com.android.tools.build:gradle:7.2.2"
     // noinspection DifferentKotlinGradleVersion
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
 
@@ -36,7 +36,6 @@ def getExtOrIntegerDefault(name) {
 }
 
 android {
-  namespace = "com.homee.mapboxnavigation"
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
 
   defaultConfig {
@@ -56,13 +55,13 @@ android {
   }
 
   compileOptions {
-      sourceCompatibility JavaVersion.VERSION_1_8
-      targetCompatibility JavaVersion.VERSION_1_8
+      sourceCompatibility JavaVersion.VERSION_17
+      targetCompatibility JavaVersion.VERSION_17
   }
 
   // Add the block below if you're using Kotlin
   kotlinOptions {
-    jvmTarget = "1.8"
+    jvmTarget = "17"
   }
 
   buildFeatures {
