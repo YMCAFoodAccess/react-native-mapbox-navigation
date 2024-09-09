@@ -21,7 +21,6 @@ def isNewArchitectureEnabled() {
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
-
 def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
 
 if (isNewArchitectureEnabled()) {
@@ -44,6 +43,7 @@ android {
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
   }
+
   buildTypes {
     release {
       minifyEnabled false
@@ -55,19 +55,23 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_17
-    targetCompatibility JavaVersion.VERSION_17
+      sourceCompatibility JavaVersion.VERSION_17
+      targetCompatibility JavaVersion.VERSION_17
   }
 
   // Add the block below if you're using Kotlin
   kotlinOptions {
-      jvmTarget = "17"
+    jvmTarget = "17"
   }
 
-   buildFeatures {
-      viewBinding true
+  buildFeatures {
+    viewBinding true
   }
 
+  // Add packaging options to avoid the so.loader issue
+  packagingOptions {
+    pickFirst '**/libc++_shared.so'
+  }
 }
 
 repositories {
@@ -85,9 +89,15 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
   // mapbox dependencies
-  implementation "com.mapbox.navigation:android:2.19.0"
-  implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-  implementation 'androidx.cardview:cardview:1.0.0'
+  implementation "com.mapbox.navigationcore:navigation:3.3.0-rc.1"
+  implementation "com.mapbox.navigationcore:copilot:3.3.0-rc.1"
+  implementation "com.mapbox.navigationcore:ui-maps:3.3.0-rc.1"
+  implementation "com.mapbox.navigationcore:voice:3.3.0-rc.1"
+  implementation "com.mapbox.navigationcore:tripdata:3.3.0-rc.1"
+  implementation "com.mapbox.navigationcore:android:3.3.0-rc.1"
+  implementation "com.mapbox.navigationcore:ui-components:3.3.0-rc.1"
+  implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+  implementation "androidx.cardview:cardview:1.0.0"
 }
 
 if (isNewArchitectureEnabled()) {
